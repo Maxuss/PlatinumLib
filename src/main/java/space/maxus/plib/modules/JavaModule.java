@@ -2,16 +2,37 @@ package space.maxus.plib.modules;
 
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.UnknownNullability;
 import space.maxus.plib.PlatinumLib;
 import space.maxus.plib.exceptions.Provoker;
+import space.maxus.plib.json.JsonHelper;
+import space.maxus.plib.lang.Localization;
 import space.maxus.plib.utils.Utils;
 
 import java.io.IOException;
+import java.util.List;
+import java.util.Locale;
 import java.util.logging.Level;
 
 public abstract class JavaModule extends JavaPlugin {
+    @UnknownNullability
+    private String moduleId;
+
     @Nullable
     public Module moduleAnnotation = this.getClass().getAnnotation(Module.class);
+
+    @Nullable
+    private Localization localization;
+
+    @UnknownNullability
+    public String getModuleId() {
+        return moduleId;
+    }
+
+    @Nullable
+    public Localization getLocalization() {
+        return localization;
+    }
 
     @Nullable
     public String getAssetText(String assetPath) {
@@ -22,8 +43,6 @@ public abstract class JavaModule extends JavaPlugin {
         }
         return null;
     }
-
-    public String moduleId;
 
     @Override
     public final void onDisable() {
@@ -46,6 +65,11 @@ public abstract class JavaModule extends JavaPlugin {
     }
 
     private void loadLocalization() {
-
+        var languages = getAssetText("lang/languages.json");
+        if(languages == null) return;
+        List<String> langs = JsonHelper.serializeJson(languages);
+        var locales = langs.stream().map(Utils::getLocaleFromString).toList();
+        localization = new Localization(locales);
+        localization.loadLanguages(this);
     }
 }
