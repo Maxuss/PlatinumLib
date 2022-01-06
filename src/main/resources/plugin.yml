@@ -1,0 +1,8 @@
+name: PlatinumLib
+version: '${version}'
+main: space.maxus.plib.PlatinumLib
+api-version: 1.18
+prefix: PLib
+authors: [ Maxuss ]
+description: A library, allowing to make mod-like server-side plugins
+website: platinum.maxus.space
