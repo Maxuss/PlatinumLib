@@ -1,5 +1,6 @@
 package space.maxus.plib.model;
 
+import lombok.Builder;
 import net.kyori.adventure.text.Component;
 import net.minecraft.world.item.Item;
 import org.bukkit.block.Block;

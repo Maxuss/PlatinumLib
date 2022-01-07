@@ -1,25 +1,16 @@
 package space.maxus.plib.action;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class TypedEventResult<T> extends EventResult {
-    @Nullable
+    /**
+     * Value of event result
+     */
+    @Nullable @Getter @Setter
     private T typedValue;
-
-    /**
-     * Gets the value of event result
-     */
-    public @Nullable T getTypedValue() {
-        return typedValue;
-    }
-
-    /**
-     * Sets the value of event result
-     */
-    public void setTypedValue(@Nullable T typedValue) {
-        this.typedValue = typedValue;
-    }
 
     protected TypedEventResult(@Nullable T value, boolean success) {
         super(success);
