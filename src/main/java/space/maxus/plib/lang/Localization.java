@@ -19,6 +19,7 @@ import java.util.Locale;
  * <br/> <br/>
  * NOTE: if you want to localize string client-size, please use {@link net.kyori.adventure.text.TranslatableComponent} instead!
  * You can create one with {@link Component#translatable(String)}, where string is key to translated string
+ *
  * @deprecated see note above
  */
 @SuppressWarnings("DeprecatedIsStillUsed") // sadge

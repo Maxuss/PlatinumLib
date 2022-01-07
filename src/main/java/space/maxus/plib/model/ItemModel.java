@@ -29,11 +29,13 @@ public class ItemModel {
      */
     @Getter
     private final int customModelData;
+
     /**
      * Remainder in crafting grid after crafting item
      */
     @Getter
     private final ItemStack craftingRemainder;
+
     /**
      * Max allowed stack size of item
      */
@@ -52,6 +54,7 @@ public class ItemModel {
 
     /**
      * Creates a new item model with provided settings
+     *
      * @param settings item settings to use
      */
     public ItemModel(ItemSettings settings) {
