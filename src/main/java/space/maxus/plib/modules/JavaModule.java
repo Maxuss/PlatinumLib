@@ -1,5 +1,6 @@
 package space.maxus.plib.modules;
 
+import lombok.Getter;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.UnknownNullability;
@@ -20,25 +21,12 @@ public abstract class JavaModule extends JavaPlugin {
     /**
      * The {@link Module} annotation of this module
      */
-    @Nullable
-    public Module moduleAnnotation = this.getClass().getAnnotation(Module.class);
-    @UnknownNullability
+    @Nullable @Getter
+    private final Module moduleAnnotation = this.getClass().getAnnotation(Module.class);
+    @UnknownNullability @Getter
     private String moduleId;
-    @Nullable
+    @Nullable @Getter
     private Localization localization;
-
-    /**
-     * @return ID of module
-     */
-    @UnknownNullability
-    public String getModuleId() {
-        return moduleId;
-    }
-
-    @Nullable
-    public Localization getLocalization() {
-        return localization;
-    }
 
     /**
      * Override this method to provide module enable logic
@@ -101,7 +89,7 @@ public abstract class JavaModule extends JavaPlugin {
             Provoker.provoke();
         }
         moduleId = moduleAnnotation.id();
-
+        loadLocalization();
         moduleLoad();
     }
 
