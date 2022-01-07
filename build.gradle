@@ -8,8 +8,15 @@ group = 'space.maxus'
 version = '0.3-DEV'
 def targetJavaVersion = 17
 
+repositories {
+    mavenCentral()
+}
+
 dependencies {
     paperweightDevelopmentBundle("io.papermc.paper:dev-bundle:1.18.1-R0.1-SNAPSHOT")
+
+    compileOnly 'org.projectlombok:lombok:1.18.22'
+    annotationProcessor 'org.projectlombok:lombok:1.18.22'
 }
 
 java {

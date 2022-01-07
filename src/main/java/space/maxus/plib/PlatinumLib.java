@@ -12,9 +12,15 @@ public final class PlatinumLib extends JavaPlugin {
         return INSTANCE.getLogger();
     }
 
+
+    public void TEST() {
+
+    }
+
     @Override
     public void onEnable() {
         INSTANCE = this;
+        TEST();
     }
 
     @Override
