@@ -17,4 +17,9 @@ public @interface Module {
      * ID of module
      */
     @NotNull String id();
+
+    /**
+     * Module description
+     */
+    @NotNull String description();
 }
