@@ -15,8 +15,14 @@ import java.util.List;
 import java.util.Locale;
 
 /**
- * Class used for operations with localizing strings and components
+ * Class used for operations with localizing strings and components server side
+ * <br/> <br/>
+ * NOTE: if you want to localize string client-size, please use {@link net.kyori.adventure.text.TranslatableComponent} instead!
+ * You can create one with {@link Component#translatable(String)}, where string is key to translated string
+ * @deprecated see note above
  */
+@SuppressWarnings("DeprecatedIsStillUsed") // sadge
+@Deprecated
 public class Localization {
     private final List<Locale> locales;
 
