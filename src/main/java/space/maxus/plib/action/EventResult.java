@@ -6,13 +6,6 @@ package space.maxus.plib.action;
 public class EventResult {
     private final boolean success;
 
-    /**
-     * Whether the event was successful
-     */
-    public boolean isSuccessful() {
-        return success;
-    }
-
     protected EventResult(boolean success) {
         this.success = success;
     }
@@ -29,5 +22,12 @@ public class EventResult {
      */
     public static EventResult fail() {
         return new EventResult(false);
+    }
+
+    /**
+     * Whether the event was successful
+     */
+    public boolean isSuccessful() {
+        return success;
     }
 }

@@ -10,4 +10,5 @@ import org.jetbrains.annotations.Nullable;
  * @param first  first element in tuple
  * @param second second element in tuple
  */
-public record Tuple<F, S>(@Nullable F first, @Nullable S second) { }
+public record Tuple<F, S>(@Nullable F first, @Nullable S second) {
+}

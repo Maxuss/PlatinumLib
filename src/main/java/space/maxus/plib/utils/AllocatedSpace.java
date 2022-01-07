@@ -4,7 +4,8 @@ import lombok.Getter;
 import lombok.Setter;
 
 public class AllocatedSpace<T> {
-    @Getter @Setter
+    @Getter
+    @Setter
     private T reserved;
 
     private AllocatedSpace() {

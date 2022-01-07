@@ -19,14 +19,13 @@ public class ModelRegistry {
      * Amount for registry to be pushed, when allocation occurs
      */
     public static final int PUSH_AMOUNT = 1;
-
-    private static int cursor = CMD_POS_OFFSET;
-
     @Getter
     private static final HashMap<Integer, AllocatedSpace<ItemModel>> registrants = new HashMap<>();
+    private static int cursor = CMD_POS_OFFSET;
 
     /**
      * Allocates space for model in registry
+     *
      * @return index position of allocation
      */
     public static int allocate() {
@@ -37,6 +36,7 @@ public class ModelRegistry {
 
     /**
      * Allocates space for model in registry and puts the model here
+     *
      * @param value value to be put inside the registry
      * @return index position of allocation
      */
@@ -49,6 +49,7 @@ public class ModelRegistry {
     /**
      * Allocates space at specific index position and shifts the cursor to current position.<br/>
      * Note, that this method is unstable, and it can break plugin system because of cursor shift.
+     *
      * @param position position which should be prepared
      * @return the position index
      */
@@ -60,9 +61,11 @@ public class ModelRegistry {
 
     /**
      * Removed the value at provided index of the cell and returns it
+     *
      * @param at index of the cell, memory of which to be freed
      * @return popped value from the registry
      */
+    @SuppressWarnings("UnusedReturnValue")
     public static AllocatedSpace<ItemModel> free(int at) {
         var value = registrants.get(at);
         registrants.remove(at);
@@ -71,7 +74,8 @@ public class ModelRegistry {
 
     /**
      * Fills the space in registry with provided value
-     * @param at position to be filled
+     *
+     * @param at    position to be filled
      * @param value value to be put
      */
     public static void fill(int at, ItemModel value) {
@@ -80,6 +84,7 @@ public class ModelRegistry {
 
     /**
      * Gets the value at provided cell
+     *
      * @param at index of allocated space
      * @return model at the cell
      */

@@ -14,8 +14,9 @@ public class Identifier {
 
     /**
      * Constructs a new identifier
+     *
      * @param namespace namespace eof identifier
-     * @param path path of identifier
+     * @param path      path of identifier
      * @deprecated can cause unexpected behaviour with resources. Use
      */
     @SuppressWarnings("DeprecatedIsStillUsed") // sadge
@@ -31,6 +32,6 @@ public class Identifier {
 
     @Override
     public String toString() {
-        return namespace+':'+path;
+        return namespace + ':' + path;
     }
 }

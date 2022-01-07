@@ -13,6 +13,7 @@ public class Provoker {
 
     /**
      * Provokes a provided error
+     *
      * @param e error to be provoked
      */
     @SneakyThrows

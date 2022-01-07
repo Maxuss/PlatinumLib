@@ -1,6 +1,5 @@
 package space.maxus.plib.registry;
 
-import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 import space.maxus.plib.PlatinumLib;
 
@@ -12,8 +11,8 @@ public abstract sealed class SimpleRegistry<T> implements Registry<T> permits It
 
     @Override
     public void performRegistration(Identifier id, T value) {
-        if(registrants.containsKey(id)) {
-            PlatinumLib.logger().warning("Re-registering an element with id "+id+"!");
+        if (registrants.containsKey(id)) {
+            PlatinumLib.logger().warning("Re-registering an element with id " + id + "!");
         }
 
         registrants.put(id, value);
@@ -23,12 +22,13 @@ public abstract sealed class SimpleRegistry<T> implements Registry<T> permits It
 
     @Override
     public T find(Identifier id) {
-        if(!registrants.containsKey(id))
+        if (!registrants.containsKey(id))
             return null;
 
         return externalFind(id);
     }
 
     protected abstract void externalRegistration(Identifier id, T value);
+
     protected abstract T externalFind(Identifier id);
 }

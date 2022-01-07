@@ -9,7 +9,9 @@ public class TypedEventResult<T> extends EventResult {
     /**
      * Value of event result
      */
-    @Nullable @Getter @Setter
+    @Nullable
+    @Getter
+    @Setter
     private T typedValue;
 
     protected TypedEventResult(@Nullable T value, boolean success) {
@@ -19,6 +21,7 @@ public class TypedEventResult<T> extends EventResult {
 
     /**
      * Marks that the event succeeded
+     *
      * @param value value to be stored inside result
      */
     public static <V> TypedEventResult<V> success(@NotNull V value) {
@@ -27,6 +30,7 @@ public class TypedEventResult<T> extends EventResult {
 
     /**
      * Marks that the event failed and should be cancelled
+     *
      * @param value value to be stored inside result. May be null.
      */
     public static <V> TypedEventResult<V> fail(@Nullable V value) {

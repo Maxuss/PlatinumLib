@@ -21,11 +21,14 @@ public abstract class JavaModule extends JavaPlugin {
     /**
      * The {@link Module} annotation of this module
      */
-    @Nullable @Getter
+    @Nullable
+    @Getter
     private final Module moduleAnnotation = this.getClass().getAnnotation(Module.class);
-    @UnknownNullability @Getter
+    @UnknownNullability
+    @Getter
     private String moduleId;
-    @Nullable @Getter
+    @Nullable
+    @Getter
     private Localization localization;
 
     /**
@@ -51,6 +54,7 @@ public abstract class JavaModule extends JavaPlugin {
 
     /**
      * Reads the asset from text
+     *
      * @param assetPath relative path from `assets` folder to the required resource
      * @return text of asset or null
      */
@@ -58,8 +62,8 @@ public abstract class JavaModule extends JavaPlugin {
     public String getAssetText(String assetPath) {
         try {
             var resource = this.getResource("assets/" + moduleId + "/" + assetPath);
-            if(resource == null)
-                throw new IOException("Could not find resource by asset path "+assetPath+"!");
+            if (resource == null)
+                throw new IOException("Could not find resource by asset path " + assetPath + "!");
             return Utils.readToEnd(resource);
         } catch (IOException e) {
             Utils.logError(e);
