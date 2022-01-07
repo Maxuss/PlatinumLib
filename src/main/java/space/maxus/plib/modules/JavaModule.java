@@ -11,16 +11,13 @@ import space.maxus.plib.utils.Utils;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Locale;
 import java.util.logging.Level;
 
 public abstract class JavaModule extends JavaPlugin {
-    @UnknownNullability
-    private String moduleId;
-
     @Nullable
     public Module moduleAnnotation = this.getClass().getAnnotation(Module.class);
-
+    @UnknownNullability
+    private String moduleId;
     @Nullable
     private Localization localization;
 
@@ -37,7 +34,10 @@ public abstract class JavaModule extends JavaPlugin {
     @Nullable
     public String getAssetText(String assetPath) {
         try {
-            return Utils.readToEnd(this.getResource("assets/"+moduleId+"/"+assetPath));
+            var resource = this.getResource("assets/" + moduleId + "/" + assetPath);
+            if(resource == null)
+                throw new IOException("Could not find resource by asset path "+assetPath+"!");
+            return Utils.readToEnd(resource);
         } catch (IOException e) {
             Utils.logError(e);
         }
@@ -57,7 +57,7 @@ public abstract class JavaModule extends JavaPlugin {
     @Override
     public final void onLoad() {
         PlatinumLib.logger().log(Level.INFO, String.format("Loading Module %s", this.getClass().getCanonicalName()));
-        if(moduleAnnotation == null) {
+        if (moduleAnnotation == null) {
             PlatinumLib.logger().log(Level.SEVERE, "The module " + this.getClass().getCanonicalName() + " does not have Module annotation! Prepare for crash!");
             Provoker.provoke();
         }
@@ -66,8 +66,8 @@ public abstract class JavaModule extends JavaPlugin {
 
     private void loadLocalization() {
         var languages = getAssetText("lang/languages.json");
-        if(languages == null) return;
-        List<String> langs = JsonHelper.serializeJson(languages);
+        if (languages == null) return;
+        List<String> langs = JsonHelper.deserializeJson(languages);
         var locales = langs.stream().map(Utils::getLocaleFromString).toList();
         localization = new Localization(locales);
         localization.loadLanguages(this);
