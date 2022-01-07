@@ -69,6 +69,7 @@ public class ItemSettings {
         /**
          * Sets max stack size of item.<br/>
          * NOTE: it is not recommended to set max stack size to over 64, it might break client!
+         *
          * @param stackSize max stack size of item
          */
         public Builder maxStackSize(int stackSize) {
@@ -81,6 +82,7 @@ public class ItemSettings {
          * NOTE: the {@link FoodSettings} will override it:<br/>
          * If item is snack, the item type will be set to {@link Material#DRIED_KELP}.<br/>
          * Otherwise the item type will be set to {@link Material#COOKED_BEEF}.
+         *
          * @param mat base item material
          */
         public Builder baseMaterial(Material mat) {
@@ -92,6 +94,7 @@ public class ItemSettings {
          * Sets the model id of the item.<br/>
          * It is not recommended to do, because it shifts {@link ModelRegistry}'s cursor,<br/>
          * possibly causing registry overwrites. Do this on your own risk!
+         *
          * @param modelId new model id
          */
         public Builder modelId(int modelId) {
@@ -103,6 +106,7 @@ public class ItemSettings {
         /**
          * Configures the food settings of the item.<br/>
          * It will override item type! See {@link ItemSettings.Builder#baseMaterial(Material)} for more info.
+         *
          * @param food food settings to be applied to the item
          */
         public Builder food(FoodSettings food) {
@@ -112,6 +116,7 @@ public class ItemSettings {
 
         /**
          * Sets the rarity of the item
+         *
          * @param rarity the new rarity of item
          */
         public Builder rarity(Rarity rarity) {
@@ -129,6 +134,7 @@ public class ItemSettings {
 
         /**
          * Sets the remainder after crafting with this item
+         *
          * @param remainder the new crafting remainder
          */
         public Builder craftingRemainder(ItemStack remainder) {

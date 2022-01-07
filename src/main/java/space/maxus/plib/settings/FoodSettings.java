@@ -1,7 +1,6 @@
 package space.maxus.plib.settings;
 
 import lombok.Getter;
-import org.bukkit.Effect;
 import space.maxus.plib.effects.ApplicableEffect;
 
 import java.util.List;
@@ -55,6 +54,7 @@ public class FoodSettings {
 
         /**
          * Sets the amount of hunger the food will restore
+         *
          * @param hunger amount of hunger to restore
          */
         public Builder hunger(int hunger) {
@@ -64,6 +64,7 @@ public class FoodSettings {
 
         /**
          * Sets the amount of saturation the food will restore
+         *
          * @param saturation amount of saturation to restore
          */
         public Builder saturation(int saturation) {
@@ -89,6 +90,7 @@ public class FoodSettings {
 
         /**
          * Adds custom effects to be applied when the food is eaten
+         *
          * @param effects effects to be applied
          */
         public Builder effects(ApplicableEffect... effects) {

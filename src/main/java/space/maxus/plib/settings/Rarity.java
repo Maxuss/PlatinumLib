@@ -24,9 +24,7 @@ public enum Rarity {
      * Either super rare items, like dragon egg, or<br/>
      * creative-only items, like command block, structure block, etc.
      */
-    EPIC(NamedTextColor.LIGHT_PURPLE)
-
-    ;
+    EPIC(NamedTextColor.LIGHT_PURPLE);
 
     /**
      * The color formatting of the rarity

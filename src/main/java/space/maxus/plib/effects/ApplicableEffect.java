@@ -12,7 +12,8 @@ public class ApplicableEffect {
     /**
      * Chance for effect to apply. 1.00f by default, which means 100%
      */
-    @Getter @Setter
+    @Getter
+    @Setter
     private float applyChance = 1.00f;
 
     /**
@@ -24,15 +25,18 @@ public class ApplicableEffect {
     /**
      * Duration of the effect in ticks
      */
-    @Getter @Setter
+    @Getter
+    @Setter
     private long duration;
 
-    private ApplicableEffect() { }
+    private ApplicableEffect() {
+    }
 
     /**
      * Constructs a vanilla-based effect
+     *
      * @param effect effect to be used
-     * @param ticks duration in ticks for effect to last
+     * @param ticks  duration in ticks for effect to last
      */
     public static ApplicableEffect vanilla(Effect effect, long ticks) {
         var ef = new ApplicableEffect();
@@ -43,8 +47,9 @@ public class ApplicableEffect {
 
     /**
      * Constructs a custom-based effect
+     *
      * @param effect effect to be used
-     * @param ticks duration in ticks for event to last
+     * @param ticks  duration in ticks for event to last
      */
     public static ApplicableEffect custom(EffectModel effect, long ticks) {
         throw new UnsupportedOperationException("Custom effects are not yet supported!");
