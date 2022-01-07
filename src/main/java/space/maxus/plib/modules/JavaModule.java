@@ -13,7 +13,13 @@ import java.io.IOException;
 import java.util.List;
 import java.util.logging.Level;
 
+/**
+ * Main entrypoint for Platinum modules
+ */
 public abstract class JavaModule extends JavaPlugin {
+    /**
+     * The {@link Module} annotation of this module
+     */
     @Nullable
     public Module moduleAnnotation = this.getClass().getAnnotation(Module.class);
     @UnknownNullability
@@ -21,6 +27,9 @@ public abstract class JavaModule extends JavaPlugin {
     @Nullable
     private Localization localization;
 
+    /**
+     * @return ID of module
+     */
     @UnknownNullability
     public String getModuleId() {
         return moduleId;
@@ -31,6 +40,32 @@ public abstract class JavaModule extends JavaPlugin {
         return localization;
     }
 
+    /**
+     * Override this method to provide module enable logic
+     */
+    public void moduleEnable() {
+
+    }
+
+    /**
+     * Override this method to provide module disable logic
+     */
+    public void moduleDisable() {
+
+    }
+
+    /**
+     * Override this method to provide module loading logic
+     */
+    public void moduleLoad() {
+
+    }
+
+    /**
+     * Reads the asset from text
+     * @param assetPath relative path from `assets` folder to the required resource
+     * @return text of asset or null
+     */
     @Nullable
     public String getAssetText(String assetPath) {
         try {
@@ -47,11 +82,15 @@ public abstract class JavaModule extends JavaPlugin {
     @Override
     public final void onDisable() {
         PlatinumLib.logger().log(Level.INFO, String.format("Disabling Module %s", this.getClass().getCanonicalName()));
+
+        moduleDisable();
     }
 
     @Override
     public final void onEnable() {
         PlatinumLib.logger().log(Level.INFO, String.format("Enabling Module %s", this.getClass().getCanonicalName()));
+
+        moduleEnable();
     }
 
     @Override
@@ -62,6 +101,8 @@ public abstract class JavaModule extends JavaPlugin {
             Provoker.provoke();
         }
         moduleId = moduleAnnotation.id();
+
+        moduleLoad();
     }
 
     private void loadLocalization() {

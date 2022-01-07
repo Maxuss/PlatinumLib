@@ -5,7 +5,6 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.logging.Logger;
 
-
 public final class PlatinumLib extends JavaPlugin {
     public static PlatinumLib INSTANCE;
 

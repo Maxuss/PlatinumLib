@@ -1,1 +1,11 @@
+pluginManagement {
+    repositories {
+        gradlePluginPortal()
+        maven {
+            name = 'paperweight-repo'
+            url = 'https://papermc.io/repo/repository/maven-public/'
+        }
+    }
+}
+
 rootProject.name = 'PlatinumLib'
