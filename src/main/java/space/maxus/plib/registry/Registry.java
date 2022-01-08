@@ -2,6 +2,9 @@ package space.maxus.plib.registry;
 
 import space.maxus.plib.model.ItemModel;
 
+import java.util.HashMap;
+import java.util.List;
+
 /**
  * A registry, that allows for registering custom elements inside
  *
@@ -19,7 +22,13 @@ public sealed interface Registry<T> permits SimpleRegistry {
         return registry.find(id);
     }
 
+    static List<Identifier> entries(Registry<?> registry) {
+        return registry.identifiers();
+    }
+
     T find(Identifier id);
+
+    List<Identifier> identifiers();
 
     void performRegistration(Identifier id, T value);
 }

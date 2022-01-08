@@ -6,3 +6,5 @@ prefix: PLib
 authors: [ Maxuss ]
 description: A library, allowing to make mod-like server-side plugins
 website: platinum.maxus.space
+libraries:
+  - commons-net:commons-net:3.8.0

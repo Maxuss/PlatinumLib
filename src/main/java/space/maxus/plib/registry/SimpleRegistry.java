@@ -4,6 +4,7 @@ import org.jetbrains.annotations.NotNull;
 import space.maxus.plib.PlatinumLib;
 
 import java.util.HashMap;
+import java.util.List;
 
 public abstract sealed class SimpleRegistry<T> implements Registry<T> permits ItemRegistry {
     @NotNull
@@ -26,6 +27,11 @@ public abstract sealed class SimpleRegistry<T> implements Registry<T> permits It
             return null;
 
         return externalFind(id);
+    }
+
+    @Override
+    public List<Identifier> identifiers() {
+        return this.registrants.keySet().stream().toList();
     }
 
     protected abstract void externalRegistration(Identifier id, T value);

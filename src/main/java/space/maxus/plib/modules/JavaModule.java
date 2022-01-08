@@ -8,6 +8,7 @@ import space.maxus.plib.PlatinumLib;
 import space.maxus.plib.exceptions.Provoker;
 import space.maxus.plib.json.JsonHelper;
 import space.maxus.plib.lang.Localization;
+import space.maxus.plib.textures.ResourcePack;
 import space.maxus.plib.utils.Utils;
 
 import java.io.IOException;
@@ -17,6 +18,7 @@ import java.util.logging.Level;
 /**
  * Main entrypoint for Platinum modules
  */
+@SuppressWarnings({"deprecation", "DeprecatedIsStillUsed"})
 public abstract class JavaModule extends JavaPlugin {
     /**
      * The {@link Module} annotation of this module
@@ -24,6 +26,8 @@ public abstract class JavaModule extends JavaPlugin {
     @Nullable
     @Getter
     private final Module moduleAnnotation = this.getClass().getAnnotation(Module.class);
+    @Getter
+    private ResourcePack resourcePack;
     @UnknownNullability
     @Getter
     private String moduleId;
@@ -71,29 +75,35 @@ public abstract class JavaModule extends JavaPlugin {
         return null;
     }
 
+    @Deprecated
     @Override
-    public final void onDisable() {
+    public void onDisable() {
         PlatinumLib.logger().log(Level.INFO, String.format("Disabling Module %s", this.getClass().getCanonicalName()));
 
         moduleDisable();
     }
 
+    @Deprecated
     @Override
-    public final void onEnable() {
+    public void onEnable() {
         PlatinumLib.logger().log(Level.INFO, String.format("Enabling Module %s", this.getClass().getCanonicalName()));
-
-        moduleEnable();
-    }
-
-    @Override
-    public final void onLoad() {
-        PlatinumLib.logger().log(Level.INFO, String.format("Loading Module %s", this.getClass().getCanonicalName()));
         if (moduleAnnotation == null) {
             PlatinumLib.logger().log(Level.SEVERE, "The module " + this.getClass().getCanonicalName() + " does not have Module annotation! Prepare for crash!");
             Provoker.provoke();
         }
         moduleId = moduleAnnotation.id();
         loadLocalization();
+        resourcePack = new ResourcePack(this);
+        moduleEnable();
+        PlatinumLib.THREAD_POOL.execute(() -> {
+            resourcePack.generateResourcePack();
+            resourcePack.sendResourcePack();
+        });
+    }
+
+    @Deprecated
+    @Override
+    public void onLoad() {
         moduleLoad();
     }
 

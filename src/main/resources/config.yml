@@ -1,0 +1,5 @@
+ftp:
+  port: 21
+  remote: ftp.example.com
+  password: SECURE_PASSWORD
+  username: USERNAME

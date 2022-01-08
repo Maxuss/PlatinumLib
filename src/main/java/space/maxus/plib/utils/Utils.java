@@ -8,9 +8,14 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Locale;
 import java.util.logging.Level;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 public class Utils {
     public static @NotNull String readToEnd(@NotNull InputStream stream) throws IOException {
@@ -59,6 +64,24 @@ public class Utils {
             country = localeString.substring(languageIndex + 1, countryIndex);
             String variant = localeString.substring(countryIndex + 1);
             return new Locale(language, country, variant);
+        }
+    }
+
+    public static void zipDir(Path sourceDirPath, Path zipFilePath) throws IOException {
+        var p = Files.createFile(zipFilePath);
+        try (ZipOutputStream zs = new ZipOutputStream(Files.newOutputStream(p))) {
+            Files.walk(sourceDirPath)
+                    .filter(path -> !Files.isDirectory(path))
+                    .forEach(path -> {
+                        ZipEntry zipEntry = new ZipEntry(sourceDirPath.relativize(path).toString());
+                        try {
+                            zs.putNextEntry(zipEntry);
+                            Files.copy(path, zs);
+                            zs.closeEntry();
+                        } catch (IOException e) {
+                            logError(e);
+                        }
+                    });
         }
     }
 }

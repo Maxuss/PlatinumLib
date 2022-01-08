@@ -54,6 +54,10 @@ public class ItemSettings {
     private ItemSettings() {
     }
 
+    public static Builder builder() {
+        return new Builder();
+    }
+
     /**
      * Builder used for building item configuration settings
      */
@@ -154,6 +158,12 @@ public class ItemSettings {
             settings.rarity = this.rarity;
             settings.fireResistant = this.fireResistant;
             settings.craftingRemainder = this.craftingRemainder;
+
+            if(foodSettings != null) {
+                if(foodSettings.isSnack()) {
+                    settings.type = Material.DRIED_KELP;
+                } else settings.type = Material.COOKED_BEEF;
+            }
 
             return settings;
         }
