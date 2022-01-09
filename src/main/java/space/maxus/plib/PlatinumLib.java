@@ -1,14 +1,10 @@
 package space.maxus.plib;
 
+import org.bukkit.Bukkit;
 import org.jetbrains.annotations.NotNull;
-import space.maxus.plib.model.ItemModel;
+import space.maxus.plib.listeners.StackSizeMaintainer;
 import space.maxus.plib.modules.JavaModule;
 import space.maxus.plib.modules.Module;
-import space.maxus.plib.registry.Identifier;
-import space.maxus.plib.registry.Registry;
-import space.maxus.plib.settings.FoodSettings;
-import space.maxus.plib.settings.ItemSettings;
-import space.maxus.plib.settings.Rarity;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -33,6 +29,7 @@ public final class PlatinumLib extends JavaModule {
     @Override
     public void onEnable() {
         INSTANCE = this;
+        Bukkit.getServer().getPluginManager().registerEvents(new StackSizeMaintainer(), this);
         super.onEnable();
     }
 

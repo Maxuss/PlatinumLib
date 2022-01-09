@@ -1,5 +1,6 @@
 package space.maxus.plib.utils;
 
+import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import space.maxus.plib.PlatinumLib;
@@ -11,7 +12,9 @@ import java.io.InputStreamReader;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Locale;
 import java.util.logging.Level;
 import java.util.zip.ZipEntry;
@@ -31,11 +34,8 @@ public class Utils {
     }
 
     public static void logError(@NotNull Exception e) {
-        PlatinumLib.logger().log(Level.WARNING, e.getMessage());
-        for (var ele :
-                Arrays.stream(e.getStackTrace()).map(StackTraceElement::toString).toList()) {
-            PlatinumLib.logger().log(Level.WARNING, ele);
-        }
+        PlatinumLib.logger().log(Level.SEVERE, e.getMessage());
+        e.printStackTrace();
     }
 
     public static @Nullable Locale getLocaleFromString(@Nullable String localeString) {
@@ -84,5 +84,31 @@ public class Utils {
                         }
                     });
         }
+    }
+
+    public static List<ItemStack> distributeItemsEvenly(int maxAmount, ItemStack item) {
+        ArrayList<ItemStack> list = new ArrayList<>();
+        // max amount is equal or more than the item amount
+        if(maxAmount >= item.getAmount()) {
+            list.add(item);
+            return list;
+        }
+        // item amount is more than max amount, need distribution
+        // while item amount is more than max amount
+        // clone the item, that will have max amount as stack size
+        // then reduce the amount of current item
+
+        // those descriptions above might look dumb, but
+        // my head was exploding while i was working on item distribution,
+        // so i wrote them mostly for myself to understand the code
+        // :P
+        while(item.getAmount() > maxAmount) {
+            var clone = item.clone();
+            clone.setAmount(maxAmount);
+            list.add(clone);
+            item.setAmount(item.getAmount() - maxAmount);
+        }
+        list.add(item);
+        return list;
     }
 }

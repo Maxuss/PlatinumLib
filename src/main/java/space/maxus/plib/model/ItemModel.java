@@ -13,16 +13,20 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
+import space.maxus.plib.PlatinumLib;
 import space.maxus.plib.action.ClickContext;
 import space.maxus.plib.action.TypedEventResult;
 import space.maxus.plib.effects.ApplicableEffect;
 import space.maxus.plib.exceptions.NBTModificationException;
 import space.maxus.plib.exceptions.Provoker;
 import space.maxus.plib.registry.Identifier;
+import space.maxus.plib.registry.Registry;
 import space.maxus.plib.settings.FoodSettings;
 import space.maxus.plib.settings.ItemSettings;
 import space.maxus.plib.settings.Rarity;
+import space.maxus.plib.utils.Utils;
 
+import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
@@ -32,6 +36,23 @@ import java.util.UUID;
  */
 public class ItemModel {
     static final HashMap<UUID, ItemStack> _remainders = new HashMap<>();
+
+    /**
+     * Gets item model from default stack
+     * @param stack stack to be searched for model identifier
+     * @return found item model, or null if item does not have platinum_data/model nbt tag
+     */
+    public static ItemModel of(ItemStack stack) {
+        var nms = CraftItemStack.asNMSCopy(stack);
+        if(nms.tag == null)
+            return null;
+        if(!nms.tag.contains("platinum_data"))
+            return null;
+        var dataTag = (CompoundTag) nms.tag.get("platinum_data");
+        assert dataTag != null;
+        var id = Identifier.parse(dataTag.getString("model"));
+        return Registry.find(Registry.ITEM, id);
+    }
 
     /**
      * Food properties of item
@@ -87,7 +108,7 @@ public class ItemModel {
         this.foodSettings = settings.getFoodSettings();
         this.customModelData = settings.getCustomModelData();
         this.craftingRemainder = settings.getCraftingRemainder();
-        this.maxStackSize = settings.getMaxStackSize();
+        this.maxStackSize = Math.max(settings.getMaxStackSize(), 1);
         this.rarity = settings.getRarity();
         this.type = settings.getType();
 
@@ -113,7 +134,9 @@ public class ItemModel {
         var dataComp = new CompoundTag();
         dataComp.putString("model", id.toString());
         dataComp.put("food", food);
-        dataComp.putInt("maxSize", maxStackSize);
+        if(maxStackSize != type.getMaxStackSize()) {
+            dataComp.putInt("maxSize", maxStackSize);
+        }
 
         if(craftingRemainder.getType() != Material.AIR) {
             var cid = UUID.randomUUID();
@@ -124,6 +147,30 @@ public class ItemModel {
         nbt.put("platinum_data", dataComp);
 
         nmsStack.tag = nbt;
+
+        // reflection max stack size modifications
+        if(maxStackSize != type.getMaxStackSize()) {
+            var item = nmsStack.getItem();
+            Field fMaxStackSize = null;
+            try {
+                fMaxStackSize = item.getClass().getField("maxStackSize");
+            } catch (NoSuchFieldException e) {
+                Provoker.provoke(e);
+            }
+
+            fMaxStackSize.setAccessible(true);
+            if(maxStackSize > 64) {
+                PlatinumLib.logger().warning("Registering an item model with max stack size over 64! This might cause client errors!");
+                if(maxStackSize > 127) {
+                    Provoker.provoke(new IllegalArgumentException("Item max stack size is over 127!"));
+                }
+            }
+            try {
+                fMaxStackSize.set(item, maxStackSize);
+            } catch (IllegalAccessException e) {
+                Provoker.provoke(e);
+            }
+        }
 
         // more modifications
         stack = CraftItemStack.asBukkitCopy(nmsStack);

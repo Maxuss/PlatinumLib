@@ -30,6 +30,11 @@ public class Identifier {
         return new Identifier(owner.getModuleId(), path);
     }
 
+    public static Identifier parse(String raw) {
+        var split = raw.split(":", 2);
+        return new Identifier(split[0], split[1]);
+    }
+
     @Override
     public String toString() {
         return namespace + ':' + path;
