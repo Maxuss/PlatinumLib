@@ -3,6 +3,7 @@ package space.maxus.plib.effects;
 import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.Effect;
+import org.bukkit.potion.PotionEffectType;
 import space.maxus.plib.model.EffectModel;
 
 /**
@@ -20,7 +21,7 @@ public class ApplicableEffect {
      * The potion effect that will be applied
      */
     @Getter
-    private Effect potionEffect;
+    private PotionEffectType potionEffect;
 
     /**
      * Duration of the effect in ticks
@@ -38,7 +39,7 @@ public class ApplicableEffect {
      * @param effect effect to be used
      * @param ticks  duration in ticks for effect to last
      */
-    public static ApplicableEffect vanilla(Effect effect, long ticks) {
+    public static ApplicableEffect vanilla(PotionEffectType effect, long ticks) {
         var ef = new ApplicableEffect();
         ef.potionEffect = effect;
         ef.duration = ticks;
@@ -53,5 +54,10 @@ public class ApplicableEffect {
      */
     public static ApplicableEffect custom(EffectModel effect, long ticks) {
         throw new UnsupportedOperationException("Custom effects are not yet supported!");
+    }
+
+    @Override
+    public String toString() {
+        return potionEffect.getKey() + ":" + applyChance + ":" + duration;
     }
 }

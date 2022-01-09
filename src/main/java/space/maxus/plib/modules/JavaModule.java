@@ -5,6 +5,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.UnknownNullability;
 import space.maxus.plib.PlatinumLib;
+import space.maxus.plib.exceptions.AnnotationMissingException;
 import space.maxus.plib.exceptions.Provoker;
 import space.maxus.plib.json.JsonHelper;
 import space.maxus.plib.lang.Localization;
@@ -89,7 +90,7 @@ public abstract class JavaModule extends JavaPlugin {
         PlatinumLib.logger().log(Level.INFO, String.format("Enabling Module %s", this.getClass().getCanonicalName()));
         if (moduleAnnotation == null) {
             PlatinumLib.logger().log(Level.SEVERE, "The module " + this.getClass().getCanonicalName() + " does not have Module annotation! Prepare for crash!");
-            Provoker.provoke();
+            Provoker.provoke(new AnnotationMissingException(Module.class));
         }
         moduleId = moduleAnnotation.id();
         loadLocalization();

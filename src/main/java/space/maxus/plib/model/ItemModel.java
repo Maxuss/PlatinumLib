@@ -2,23 +2,37 @@ package space.maxus.plib.model;
 
 import lombok.Getter;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.TranslatableComponent;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.StringTag;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.craftbukkit.v1_18_R1.inventory.CraftItemStack;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
 import space.maxus.plib.action.ClickContext;
 import space.maxus.plib.action.TypedEventResult;
+import space.maxus.plib.effects.ApplicableEffect;
+import space.maxus.plib.exceptions.NBTModificationException;
+import space.maxus.plib.exceptions.Provoker;
+import space.maxus.plib.registry.Identifier;
 import space.maxus.plib.settings.FoodSettings;
 import space.maxus.plib.settings.ItemSettings;
 import space.maxus.plib.settings.Rarity;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Class, representing a mod-like item. Can be overriden, as well as some of it's methods, to give the desired item behaviour
  */
 public class ItemModel {
+    static final HashMap<UUID, ItemStack> _remainders = new HashMap<>();
+
     /**
      * Food properties of item
      */
@@ -52,18 +66,80 @@ public class ItemModel {
     @Getter
     private final Material type;
 
+    @NotNull
+    private final ItemStack defaultStack;
+
+    /**
+     * Default item stack of this item, ready for user modifications.
+     * <br/>
+     * Note, that it is cloned, so theres no way to modify default generated stack by itself
+     */
+    public final @NotNull ItemStack getDefaultStack() {
+        return defaultStack.clone();
+    }
+
     /**
      * Creates a new item model with provided settings
      *
      * @param settings item settings to use
      */
-    public ItemModel(ItemSettings settings) {
+    public ItemModel(ItemSettings settings, Identifier id) {
         this.foodSettings = settings.getFoodSettings();
         this.customModelData = settings.getCustomModelData();
         this.craftingRemainder = settings.getCraftingRemainder();
         this.maxStackSize = settings.getMaxStackSize();
         this.rarity = settings.getRarity();
         this.type = settings.getType();
+
+        var stack = new ItemStack(type);
+        // nbt modifications
+        var nmsStack = CraftItemStack.asNMSCopy(stack);
+        if(nmsStack.tag == null)
+            Provoker.provoke(new NBTModificationException("Error modifying stack nbt! The main compound tag was null!"));
+        var nbt = nmsStack.tag.copy();
+
+        // food nbt
+        var food = new CompoundTag();
+        food.putInt("hunger", foodSettings.getHunger());
+        food.putInt("saturation", foodSettings.getSaturation());
+        food.putBoolean("snack", foodSettings.isSnack());
+        food.putBoolean("alwaysEdible", foodSettings.isAlwaysEdible());
+        var effectList = new ListTag();
+        for(var e: foodSettings.getEffects()) {
+            effectList.add(StringTag.valueOf(e.toString()));
+        }
+        food.put("effects", effectList);
+
+        var dataComp = new CompoundTag();
+        dataComp.putString("model", id.toString());
+        dataComp.put("food", food);
+        dataComp.putInt("maxSize", maxStackSize);
+
+        if(craftingRemainder.getType() != Material.AIR) {
+            var cid = UUID.randomUUID();
+            _remainders.put(cid, craftingRemainder);
+            dataComp.putUUID("remainder", cid);
+        }
+
+        nbt.put("platinum_data", dataComp);
+
+        nmsStack.tag = nbt;
+
+        // more modifications
+        stack = CraftItemStack.asBukkitCopy(nmsStack);
+        var meta = stack.getItemMeta();
+        meta.setCustomModelData(this.customModelData);
+        var comp = Component.translatable("item."+id.getNamespace()+"."+id.getPath(), rarity.getColor());
+        meta.displayName(comp);
+        stack.setItemMeta(meta);
+        List<Component> modifiableList = List.of();
+        appendTooltip(stack, modifiableList);
+        var meta1 = stack.getItemMeta();
+        meta1.lore(modifiableList);
+        stack.setItemMeta(meta1);
+
+        // finish by setting default stack
+        defaultStack = stack;
     }
 
     /**

@@ -68,6 +68,7 @@ public class Utils {
     }
 
     public static void zipDir(Path sourceDirPath, Path zipFilePath) throws IOException {
+        Files.deleteIfExists(zipFilePath);
         var p = Files.createFile(zipFilePath);
         try (ZipOutputStream zs = new ZipOutputStream(Files.newOutputStream(p))) {
             Files.walk(sourceDirPath)

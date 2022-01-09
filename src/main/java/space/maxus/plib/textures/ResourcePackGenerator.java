@@ -11,7 +11,6 @@ import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Arrays;
 import java.util.Objects;
 
 public class ResourcePackGenerator implements Runnable {
@@ -37,6 +36,7 @@ public class ResourcePackGenerator implements Runnable {
             Files.createDirectories(assetFolder);
             Files.createDirectories(modelsDir.resolve("item"));
             Files.createDirectories(textureDir.resolve("item"));
+            Files.deleteIfExists(rawDirectory.resolve("pack.mcmeta"));
             Files.writeString(rawDirectory.resolve("pack.mcmeta"), meta);
         } catch (IOException e) {
             Utils.logError(e);
@@ -54,6 +54,7 @@ public class ResourcePackGenerator implements Runnable {
             }
             try {
                 var path = modelsDir.resolve("item").resolve(item.getPath()+".json");
+                Files.deleteIfExists(path);
                 var ignored = path.toFile().createNewFile();
                 Files.writeString(path, rawModel);
             } catch (IOException e) {
@@ -81,6 +82,7 @@ public class ResourcePackGenerator implements Runnable {
                             imgPath = imgPath.resolve(sp + ".png");
                         } else imgPath = imgPath.resolve(sp);
                     }
+                    Files.deleteIfExists(imgPath);
                     var ignored = imgPath.toFile().createNewFile();
                     var output = Files.newOutputStream(imgPath);
 
